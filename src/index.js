@@ -63,6 +63,8 @@ function buildSubmenu(menusublinks){
   }
 }
 
+
+
 //const topMenuLinks = document.getElementsByTagName("a");
 const topMenuLinks = topMenuEl.children;
 //console.log(topMenuLinks)
@@ -94,9 +96,8 @@ topMenuEl.addEventListener("click", event => {
           
         }
         else {
-          //esconder el submenu y escribir
-        //  console.log("active el about")
           subMenuEl.style.top="0"
+          mainEl.querySelector("h1").textContent=event.target.textContent
         }    
       }
       else{
@@ -109,5 +110,21 @@ topMenuEl.addEventListener("click", event => {
    
   
 });
+
+subMenuEl.addEventListener("click",event =>{
+  event.preventDefault();
+  if(event.target.tagName!=='A'){
+    return;
+  } 
+  console.log(event.target.textContent)
+  subMenuEl.style.top="0"
+  
+  for(let i=0;i<topMenuLinks;i++){
+    topMenuLinks.classList.remove("active")
+  }
+
+  mainEl.querySelector("h1").textContent=event.target.textContent
+  
+})
 
 
