@@ -1,4 +1,8 @@
 //import "./styles.css";
+
+/*******************************************************
+ * Array with the structure of the Menu and Submenus
+ *******************************************************/
 var menuLinks = [
   { text: "about", href: "/about" },
   {
@@ -28,14 +32,26 @@ var menuLinks = [
     ],
   },
 ];
+
+/********************************************************
+ * Defining Main Area of the webPage
+ ********************************************************/
 const mainEl = document.querySelector("main");
 mainEl.style.backgroundColor = "var(--main-bg)";
 mainEl.innerHTML = "<h1>DOM Manipulation</h1>";
 mainEl.classList = "flex-ctr";
+
+/********************************************************
+ * Defining the TOP MENU Style
+ ********************************************************/ 
 const topMenuEl = document.getElementById("top-menu");
 topMenuEl.style.height = "100%";
 topMenuEl.style.backgroundColor = "var(--top-menu-bg)";
 topMenuEl.classList.add("flex-around");
+
+/*****************************************************
+ * Adding Menu Items (a tags) 
+ *****************************************************/
 for (let i = 0; i < menuLinks.length; i++) {
   let aE1 = document.createElement("a");
   aE1.textContent = menuLinks[i].text;
@@ -43,6 +59,9 @@ for (let i = 0; i < menuLinks.length; i++) {
   topMenuEl.appendChild(aE1);
 }
 
+/*****************************************************
+ * Defining the SUB MENU Style
+ *****************************************************/
 const subMenuEl = document.getElementById("sub-menu");
 subMenuEl.style.height = "100%";
 subMenuEl.style.backgroundColor = "var(--sub-menu-bg)";
@@ -50,7 +69,10 @@ subMenuEl.classList = "flex-around";
 subMenuEl.style.position = "absolute";
 subMenuEl.style.top = "0";
 
-
+/******************************************************
+ * Function helper that add the submenu links
+ * @param {*} menusublinks 
+ ******************************************************/
 function buildSubmenu(menusublinks){
   while(subMenuEl.firstChild){
     subMenuEl.removeChild(subMenuEl.firstChild)
@@ -65,64 +87,80 @@ function buildSubmenu(menusublinks){
 
 
 
-//const topMenuLinks = document.getElementsByTagName("a");
+/*************************************************************
+ * Creating a constant to save the topMenu children elements
+ *************************************************************/
 const topMenuLinks = topMenuEl.children;
-//console.log(topMenuLinks)
+
+/*************************************************************
+ * Handle Event Listener for the Main Menu
+ *************************************************************/
 topMenuEl.addEventListener("click", event => {
+  //adding the prevetDefault to avoid propagation
   event.preventDefault();
+
+  //if the click target is not an a Tag it returns and do nothing
   if(event.target.tagName!=='A'){
        return;
      }
-   //console.log(event.target.textContent);
+  
+  //Loop to check who a tag is the target
    for(let i=0;i<topMenuLinks.length;i++){
-    //console.log(event.target.textContent+" "+ topMenuLinks[i].textContent)
+    
+    //If it is not the target the active class is removed
     if(topMenuLinks[i].textContent!==event.target.textContent){
-      //console.log("remove active from"+topMenuLinks[i].textContent)
       topMenuLinks[i].classList.remove("active")
-    } else {
-      //console.log("add active from"+topMenuLinks[i].textContent)
+    } else { //if it is the a target clicked
+      //toggle the active class
       topMenuLinks[i].classList.toggle("active")
+      //If after toggle the class is active we proceed to activate the submenu
       if(topMenuLinks[i].classList.contains('active')){
-        //activar el submenu       
+        //The about A tag is excluded       
         if(event.target.textContent!=='about'){
-          //dibjuar el submenu
+          //The submenu appears
           subMenuEl.style.top="100%"
-          //obtener el array del objeto submenu a mostrar
+          //The subarray that belong to the A tag Active it is save in a constant
           const selectedSubmenu=menuLinks.find(subMenu=>subMenu.text===event.target.textContent)
-          console.log(selectedSubmenu.subLinks)
           
-          buildSubmenu(selectedSubmenu.subLinks)
-         // console.log("active otro submenu")
-          
+          //The helper function bulidSubmenu is executed
+          buildSubmenu(selectedSubmenu.subLinks)          
         }
-        else {
+        else {//if it is the About tag clicked
+          //The submenu is hide
           subMenuEl.style.top="0"
+          //the h1 in the main element is change to ABOUT
           mainEl.querySelector("h1").textContent=event.target.textContent
         }    
       }
-      else{
+      else{//if after toggle the A don't have the active class the submenu is hide
         subMenuEl.style.top="0"
-        //console.log("inactive un submenu")
       }
       
     }
    }
-   
-  
+    
 });
 
+/***********************************************************************
+ * Handle Event Lister for the SubMenu
+ ***********************************************************************/
 subMenuEl.addEventListener("click",event =>{
+  //Adding the preventDefault to avoid propagation
   event.preventDefault();
+  //if the element click in the submenu is not a tag.  Nothing happens
   if(event.target.tagName!=='A'){
     return;
   } 
+  //Print in the console the text inside the A tag
   console.log(event.target.textContent)
-  subMenuEl.style.top="0"
   
+  //Hide the submenu
+  subMenuEl.style.top="0"
+  //Iterate between the main menu A tags to remove the active class
   for(let i=0;i<topMenuLinks;i++){
     topMenuLinks.classList.remove("active")
   }
-
+  //Change the h1 text with the name of the sub menu tag clicked
   mainEl.querySelector("h1").textContent=event.target.textContent
   
 })
