@@ -51,16 +51,15 @@ subMenuEl.style.position = "absolute";
 subMenuEl.style.top = "0";
 
 
-function buildSubmenu(){
-  if(event.target.textContent!=='about'){
-    //dibjuar el submenu
-    subMenuEl.style.top="100%"
-   // console.log("active otro submenu")
+function buildSubmenu(menusublinks){
+  while(subMenuEl.firstChild){
+    subMenuEl.removeChild(subMenuEl.firstChild)
   }
-  else {
-    //esconder el submenu y escribir
-  //  console.log("active el about")
-    subMenuEl.style.top="0"
+  for ( i=0;i<menusublinks.length;i++){
+    let aE1 = document.createElement("a");
+    aE1.textContent = menusublinks[i].text;
+    aE1.setAttribute("href", menusublinks[i].href);
+    subMenuEl.appendChild(aE1);
   }
 }
 
@@ -77,13 +76,28 @@ topMenuEl.addEventListener("click", event => {
     //console.log(event.target.textContent+" "+ topMenuLinks[i].textContent)
     if(topMenuLinks[i].textContent!==event.target.textContent){
       //console.log("remove active from"+topMenuLinks[i].textContent)
-      //topMenuLinks[i].classList.remove("active")
+      topMenuLinks[i].classList.remove("active")
     } else {
       //console.log("add active from"+topMenuLinks[i].textContent)
       topMenuLinks[i].classList.toggle("active")
       if(topMenuLinks[i].classList.contains('active')){
         //activar el submenu       
-        buildSubmenu()        
+        if(event.target.textContent!=='about'){
+          //dibjuar el submenu
+          subMenuEl.style.top="100%"
+          //obtener el array del objeto submenu a mostrar
+          const selectedSubmenu=menuLinks.find(subMenu=>subMenu.text===event.target.textContent)
+          console.log(selectedSubmenu.subLinks)
+          
+          buildSubmenu(selectedSubmenu.subLinks)
+         // console.log("active otro submenu")
+          
+        }
+        else {
+          //esconder el submenu y escribir
+        //  console.log("active el about")
+          subMenuEl.style.top="0"
+        }    
       }
       else{
         subMenuEl.style.top="0"
